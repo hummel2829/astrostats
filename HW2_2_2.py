@@ -23,9 +23,7 @@ color = 1
 count = 0
 for i in range(0,N):
     selections = np.random.choice(balls,3)
-    if selections[0]==selections[1]==color or
-        selections[1]==selections[2]==color or
-        selections[2]==selections[0]==color:
+    if selections[0]==selections[1]==color or selections[1]==selections[2]==color or selections[2]==selections[0]==color:
         count = count +1
         print(selections)
     
