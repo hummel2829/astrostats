@@ -14,7 +14,7 @@ greenballs = np.array([3,3,3,3,3,3])
 
 balls =np.concatenate([redballs,blueballs,greenballs])
 
-N = 5000
+N = 10000
 
 selections = np.empty([N,3])
 
@@ -23,9 +23,11 @@ color = 1
 count = 0
 for i in range(0,N):
     selections = np.random.choice(balls,3)
-    if selections[0]==selections[1]==color or selections[1]==selections[2]==color or selections[2]==selections[0]==color:
+    #if selections[0]==selections[1]==color or selections[1]==selections[2]==color or selections[2]==selections[0]==color:
+    #if selections[0]==selections[1]==selections[2]:
+    if selections[0]!=selections[1] and selections[1]!=selections[2] and selections[2]!=selections[0]:
         count = count +1
-        print(selections)
+        #print(selections)
     
 print(count/N)
     

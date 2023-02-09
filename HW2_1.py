@@ -36,7 +36,7 @@ for i in range(0,N):
         countc = countc +1
  
 
-with open("output.txt",'w') as f:
+with open("HW2_1.txt",'w') as f:
     print('P of having visa or master',counta/N,
           '\nP of having neither',countb/N,
           '\nP of having visa only',countc/N,file=f)
