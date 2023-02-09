@@ -23,8 +23,8 @@ for i in range(0,exp):
     finalpos.append(trial)
 
 
-y,x,_ =plt.hist(finalpos,bins=20,range=(-10,10),align='mid')
-plt.xticks(list(range(-10,10)))
+y,x,_ =plt.hist(finalpos,bins= np.linspace(-20, 20, num=41),range=(-10,10),align='left')
+#plt.xticks(list(range(-10,10)))
 plt.title('final positions from 10000 random walk of 100 steps')
 plt.xlabel('final positions')
 plt.ylabel('count of final positions')
