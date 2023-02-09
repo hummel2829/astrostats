@@ -8,19 +8,20 @@ Created on Wed Feb  8 11:07:46 2023
 
 import numpy as np
 import matplotlib.pyplot as plt
+import random
 
 
-coin =np.array([-1,1])
-steps =10000
+coin =[-1,1]
+exp =10000
+steps = 100
 
-trip = np.zeros([steps,1],dtype=int)
+count=0
+finalpos = []
 
-for i in range(0,steps):
-    trip[i] = np.random.choice(coin)
-    
-print(trip[0:9])
+for i in range(0,exp):
+    trial = sum(random.choices(coin,k=steps))
+    finalpos.append(trial)
 
 
-finish = 19
-final = np.sum(trip[0:finish])
-print(final)
+plt.hist(finalpos,bins=40)
+
