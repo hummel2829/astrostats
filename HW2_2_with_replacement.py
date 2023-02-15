@@ -10,36 +10,50 @@ greenballs = 6*[3]
 
 balls = redballs + blueballs + greenballs
 
-totalballs = N*4*[1] + N*5*[2] + N*6*[3]
+totalballs = N*[balls]
 
 counta = 0
 countb = 0
 countc = 0
 ballsdrawn = 3
 
+'''
 for i in range(0,N):
-    selections = random.choices(balls,k=ballsdrawn)
-    if selections[0]==selections[1]==color or \
-       selections[1]==selections[2]==color or \
-       selections[2]==selections[0]==color:
+    balls = redballs + blueballs + greenballs
+    print(balls)
+    balls.remove(1)
+    print(balls)
+
+'''
+
+
+for i in range(0,N):
+    balls = redballs + blueballs + greenballs
+    ball1 = random.choices(balls,k=1)
+    balls.remove(ball1[0])
+    #print(ball1 , balls)
+    ball2 = random.choices(balls,k=1)
+    balls.remove(ball2[0])
+    #print(ball2 , balls)
+    ball3 = random.choices(balls,k=1)
+    balls.remove(ball3[0])
+    #print(ball3 , balls)
+    selections = [ball1 , ball2 , ball3]
+    
+    if selections[0] == selections[1] == [color] or \
+       selections[1] == selections[2] == [color] or \
+       selections[2] == selections[0] == [color]:
        counta = counta + 1
-       balls.remove(selections[0])
-       balls.remove(selections[1])
-       balls.remove(selections[2])
+       
     if selections[0]==selections[1]==selections[2]:
        countb = countb + 1
-       balls.remove(selections[0])
-       balls.remove(selections[1])
-       balls.remove(selections[2])
+
     if selections[0] != selections[1] and \
        selections[1] != selections[2] and \
        selections[2] != selections[0]:
         countc = countc +1
-        balls.remove(selections[0])
-        balls.remove(selections[1])
-        balls.remove(selections[2])
-        #print(selections)
 
-print(counta/N) # 0.1751 - not matching analytic result
-print(countb/N) # 0.1248
-print(countc/N) # 0.2119
+
+print(counta/N) # 2/3 red
+print(countb/N) # 3/3 same color
+print(countc/N) # all diff colors
