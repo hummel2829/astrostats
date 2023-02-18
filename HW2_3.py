@@ -20,6 +20,18 @@ for i in range(0,exp):
     finalpos.append(trial)
     
  
+oddstepsfactorial = list(map(lambda x: math.factorial(x), oddsteps))
+evenstepsfactorial = list(map(lambda x: math.factorial(x), evensteps))
+ 
+
+for i in range(0,steps//2):
+    for a in range(0,steps//2):
+        print(i,a)
+        if a==i:
+            print('new i')
+            break
+
+    
 '''   
  
 evenfinalpos = []
