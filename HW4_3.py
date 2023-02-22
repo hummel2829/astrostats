@@ -5,11 +5,10 @@
 
 
 import random
-import matplotlib
-import math
+import matplotlib.pyplot as plt
+import numpy as np
 
-
-   
+experiments = 1000   
 days = 1000
 flares = 900
 hoursinday = 24
@@ -20,14 +19,18 @@ flaresim = 900*[1] + (days*hoursinday)*[0]
 
 pflareinday = flares/(days*hoursinday)
 
-flaredata = random.choices(flaresim,k = (days*hoursinday))
+flares = []
 
-countflare = 0
+for i in range(0,experiments):
+    flares = flares + [sum(random.choices(flaresim,k = (hoursinday)))]
 
-for i in range(0,len(flaredata)):
-    if flaredata[i] == 1:
-        countflare = countflare + 1
+print(sum(flares))
+counts , bins , bars = plt.hist(flares, density = True)
 
 
+font = {'fontname' : 'Times New Roman' , 'size' : 20}
+plt.title('title',**font)
+plt.show()
+print(sum(counts))
 
-print(countflare)
+
