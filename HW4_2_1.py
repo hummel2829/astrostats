@@ -31,7 +31,7 @@ plt.ylabel('number of var',**font)
 
 plt.show()
 
-fig.savefig('HW4_2_2.pdf',format = 'svg', dpi = 1000)
+fig.savefig('HW4_2_1.pdf',format = 'svg', dpi = 1000)
 
 
 
