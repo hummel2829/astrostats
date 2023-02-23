@@ -67,26 +67,32 @@ for i in range(0,days):
 
 
 
-fig = plt.figure(1)
-ax1 = fig.add_subplot(111)
+figure, axis = plt.subplots(2, 1,constrained_layout=True)
 
-ax1.bar(successes[0:len(flaresdist)],flaresdist, color = 'w', edgecolor = 'b' , width = 0.4, label='Sim')
-ax1.scatter(successes[0:len(flaresdist)],theoPp, s=200, c='r', marker="3", label='Pp(k)')
-ax1.scatter(successes[0:len(flaresdist)],theoPB, s=100, c='g', marker="+", label='PB(k)')
+axis[0].bar(successes[0:len(flaresdist)],flaresdist, color = 'w', edgecolor = 'b' , width = 0.4, label='Sim')
+axis[0].scatter(successes[0:len(flaresdist)],theoPp, s=200, c='r', marker="3", label='Pp(k)')
+axis[0].scatter(successes[0:len(flaresdist)],theoPB, s=100, c='g', marker="+", label='PB(k)')
 
-plt.legend(loc='upper right')
+axis[0].legend(loc='upper right')
 
 
 
 font = {'fontname' : 'Times New Roman' , 'size' : 20}
-plt.title('Solar flares over 1000 days',**font)
-plt.xlabel('number of flares per day',**font)
-plt.ylabel('P',**font)
+axis[0].set_title('Solar flares over 1000 days',**font)
+axis[0].set_xlabel('number of flares per day',**font)
+axis[0].set_ylabel('P',**font)
+
+axis[1].hist(times)
 
 
-
+font = {'fontname' : 'Times New Roman' , 'size' : 20}
+axis[1].set_title('time between flares',**font)
+axis[1].set_xlabel('days between flares',**font)
+axis[1].set_ylabel('counts',**font)
 
 
 plt.show()
+figure.savefig('HW4_3.pdf',format = 'svg', dpi = 1000)
+
 
 
