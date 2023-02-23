@@ -1,0 +1,5 @@
+Total: 9.5/10
+
+Note that you did with replacement for balls, so will get different answers from me.
+
+For random walk, final position = k - (nsteps - k) = 2k - nsteps.
