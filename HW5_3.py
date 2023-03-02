@@ -1,7 +1,5 @@
 
 
-import random
-import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 from math import factorial
@@ -31,9 +29,12 @@ print(interval74 , interval715)
 
 
 count = 0
+mean3 = []
+
 
 for i in range(0,experiments):
     G10 = np.random.normal(mean,std,n)
+    mean3.append(np.mean(G10))
     UB74 = np.mean(G10) + (1.96*std/sqrt(n))
     LB74 = np.mean(G10) - (1.96*std/sqrt(n))
     if LB74 <= mean <= UB74:
@@ -42,9 +43,13 @@ for i in range(0,experiments):
 fracininterval = count/experiments
 print(fracininterval)
 
+#mean3prob = [x/sum(mean3count) for x in mean3count]
+
+mean4 = []
 
 for i in range(0,experiments):
     G10 = np.random.normal(mean,std,n)
+    mean4.append(np.mean(G10))
     UB = (np.mean(G10) + (t*np.std(G10)/sqrt(n)))
     LB = (np.mean(G10) + (t*np.std(G10)/sqrt(n)))
     if LB <= mean <= UB:
@@ -54,6 +59,30 @@ fracininterval = count/experiments
 print(fracininterval)
 
 
+
+
+figure, axis = plt.subplots(1, 1,constrained_layout=True)
+
+axis.hist(mean3, bins = 100 ,stacked = True , density = True)
+
+#axis.bar(mean3,mean3prob, color = 'w', edgecolor = 'b' , width = 0.4, label='Sim')
+#axis.scatter(success[35:45],theoPB[35:45], s=20, c='r', marker="o", label='PB(k)')
+
+#axis.legend(loc='upper right')
+
+font = {'fontname' : 'Times New Roman' , 'size' : 20}
+axis.set_title('mean74 = %1.2f' %meanG10 + ', mean715 %1.2f' %meanG10  ,**font)
+
+
+
+#axis.set_title('Solar flares over 1000 days',**font)
+axis.set_xlabel('successes',**font)
+axis.set_ylabel('P',**font)
+
+txt = 'CI74 = (%1.2f' %interval74[1] + ', %1.2f)' %interval74[0] + '   CI715 = (%1.2f' %interval715[1] + ', %1.2f)' %interval715[0]
+plt.figtext(0.5, -0.1, txt, wrap=True, horizontalalignment='center', fontsize=12)
+
+plt.show()
 
 
 

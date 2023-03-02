@@ -52,7 +52,7 @@ axis.scatter(success[35:45],theoPB[35:45], s=20, c='r', marker="o", label='PB(k)
 axis.legend(loc='upper right')
 
 font = {'fontname' : 'Times New Roman' , 'size' : 20}
-axis.set_title('avg = %1.3f' %avg + ' , var = %1.3f' %stdN ,**font)
+#axis.set_title('avg = %1.3f' %avg + ' , var = %1.3f' %stdN ,**font)
 
 #axis.set_title('Solar flares over 1000 days',**font)
 axis.set_xlabel('successes',**font)
@@ -60,14 +60,5 @@ axis.set_ylabel('P',**font)
 
 
 plt.show()
-
-
-#test = sum(list(filter(lambda x: (x == 1), sample)))/len(sample)
-#print(test)
-
-
-
-
-
 
 
