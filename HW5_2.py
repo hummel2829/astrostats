@@ -17,24 +17,28 @@ rows =[*range(0,xraydata.shape[0])]
 dates = [datetime.datetime(*x) for x in xraydata]
 successes = [*range(0,len(dates))]
 
-print(dates[1]-dates[0])
 
 cc = np.diff(dates)
 timediff = [(x.seconds) for x in cc]
 timediffhours = [x/3600 for x in timediff]
-timediffcount = [timediff.count(x) for x in timediff ]
+timediffcount = [timediffhours.count(x) for x in timediffhours]
+totalflarecount = len(timediff)
 
 
-timediffprob = [x/sum(timediffcount) for x in timediffcount ]
 
-y = sum(timediffcount)/(sum(timediff))
+y = totalflarecount/(sum(timediffhours))
 
 #def expdist(x):
 #    y*exp(-y*x)
 
+timediffprob = [x/(sum(timediff)/(24*3600)) for x in timediffhours ]
+
 expdist = [y*exp(-y*x) for x in successes]
 
+secondinday = 3600*24
+#Pp = [(((y*secondinday)**k)*(exp(-y*secondinday))/factorial(k)) for k in successes[0:100] ]
 
+PB = []
 
 
 
@@ -42,8 +46,10 @@ expdist = [y*exp(-y*x) for x in successes]
 
 figure, axis = plt.subplots(1, 1,constrained_layout=True)
 
-axis.bar(timediffhours,timediffprob, color = 'b', edgecolor = 'b' , width = 0.4, label='Sim')
-#axis.scatter(successes,expdist, s=20, c='r', marker="o", label='PB(k)')
+axis.bar(timediffcount,timediffprob, color = 'b', edgecolor = 'b' , width = 0.4, label='Sim')
+axis.scatter(successes[0:100],expdist[0:100], s=20, c='r', marker="o", label='exp(k)')
+#axis.scatter(successes[0:100],Pp, s=20, c='g', marker="o", label='Pp(k)')
+
 
 axis.legend(loc='upper right')
 
