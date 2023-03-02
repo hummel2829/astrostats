@@ -59,6 +59,8 @@ timedist = list(map(newdist,flaresim))
 
 times = []
 
+# Here you are resampling your distribution rather than using the results
+# of your simulation directly. See my solution.
 for i in range(0,days):
     times = times + [sum(random.choices(timedist,k = (hoursinday)))]
 
