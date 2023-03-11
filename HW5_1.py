@@ -2,6 +2,7 @@
 
 import random
 import matplotlib.pyplot as plt
+import numpy as np
 from math import factorial
 
 
@@ -9,31 +10,16 @@ p = 0.4
 N =100
 experiments = 10000
 success = [*range(0,100)]
-data = [1,0]
 psuc = []
 nsuc = []
 
 ########################use np binomial##################
 ########################coin flip out of loop#########
 
-for i in range (0,experiments):
-    sample = random.choices(data,weights = [p,1-p], k=N)
-    nsuc.append(sum(list(filter(lambda x: (x == 1), sample))))
-    psuc.append(sum(list(filter(lambda x: (x == 1), sample)))/len(sample))
-
-def prob(n):
-    return nsuc.count(n)/experiments
-
-result = map(prob,success)
-
-Pdsuc = list(result)       #prob dist of success from sim
-
-def number(n):
-    return nsuc.count(n)
-
-result = map(number,success)
-
-ndsuc = list(result)
+Nsuccess = np.random.binomial(N, p, experiments)
+Psuccess = Nsuccess/N
+w = np.ones_like(Nsuccess)/len(Nsuccess)
+exphist = np.histogram(Nsuccess,bins =experiments, weights = w)
 
 
 def PB(k):
@@ -48,8 +34,10 @@ theoPB = list(result)
 
 figure, axis = plt.subplots(1, 1,constrained_layout=True)
 
-axis.bar(success[35:45],Pdsuc[35:45], color = 'w', edgecolor = 'b' , width = 0.4, label='Sim')
-axis.scatter(success[35:45],theoPB[35:45], s=20, c='r', marker="o", label='PB(k)')
+
+#hist = axis.hist(Nsuccess,bins = 10, weights = w, color = 'b', edgecolor = 'b' , label='Sim')
+#axis.scatter(success[20:60],theoPB[20:60], s=20, c='r', marker="o", label='PB(k)')
+axis.plot(success[20:60],theoPB[20:60], c='r', marker="o", label='PB(k)')
 
 axis.legend(loc='upper right')
 
@@ -59,6 +47,9 @@ font = {'fontname' : 'Times New Roman' , 'size' : 20}
 #axis.set_title('Solar flares over 1000 days',**font)
 axis.set_xlabel('successes',**font)
 axis.set_ylabel('P',**font)
+plt.xticks(fontsize = 25)
+plt.yticks(fontsize = 25)
+
 
 
 plt.show()
