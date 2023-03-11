@@ -65,6 +65,13 @@ flaresavginmonth = np.average(flaresinmonth, axis =1)
 
 months = np.arange(0,flaresavginmonth.shape[0])
 
+
+avgfirst10 = np.average(flaresavginmonth[0:10])
+stdfirst10 = np.std(flaresavginmonth[0:10])
+
+avglast10 = np.average(flaresavginmonth[-1:(months[-1]-11):-1])
+stdlast10 = np.std(flaresavginmonth[-1:(months[-1]-11):-1])
+
 a,b = np.polyfit(months, flaresavginmonth,1)
 
 
