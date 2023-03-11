@@ -13,6 +13,8 @@ data = [1,0]
 psuc = []
 nsuc = []
 
+########################use np binomial##################
+########################coin flip out of loop#########
 
 for i in range (0,experiments):
     sample = random.choices(data,weights = [p,1-p], k=N)

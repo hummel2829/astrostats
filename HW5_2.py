@@ -8,6 +8,12 @@ from math import factorial
 from math import exp
 
 
+
+################### use np array of 1s and 0s NOT list 
+
+
+
+
 filename = 'xray.txt'
 xraydata = np.loadtxt(filename)
 xraydata = xraydata.astype(int)

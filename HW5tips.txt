@@ -1,0 +1,6 @@
+consider coin flip outside loop
+
+use np and make list of 0s and 1s for flares for 
+
+
+np.binomial
