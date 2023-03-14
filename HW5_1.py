@@ -1,6 +1,4 @@
 
-
-import random
 import matplotlib.pyplot as plt
 import numpy as np
 from math import factorial
@@ -13,8 +11,6 @@ success = [*range(0,100)]
 psuc = []
 nsuc = []
 
-########################use np binomial##################
-########################coin flip out of loop#########
 
 Nsuccess = np.random.binomial(N, p, experiments)
 Psuccess = Nsuccess/N
@@ -28,20 +24,61 @@ def PB(k):
 result = map(PB,success)
 theoPB = list(result)
 
+pchangedata = np.zeros([10000,1])
+for a in range(0,experiments):
+    
+    data = [np.random.binomial(1, p, 1)]
+    for i in range(1,N):
+        data = np.append(data,np.random.binomial(1, p, 1))
+        
+        if data[i]==data[i-1]==1:
+            p = 0.3
+        else:
+            p = 0.4
+    pchangedata[a] = np.sum(data)
+
+pchangehist = np.histogram(pchangedata, bins=experiments,weights=w)
+
+
+print(pchangedata)
 
 
 
 
-figure, axis = plt.subplots(1, 1,constrained_layout=True)
+# plot for P(k) and simulation with p=0.4 constant
+
+figure1, axis = plt.subplots(1, 1,constrained_layout=True)
 
 
-#hist = axis.hist(Nsuccess,bins = 10, weights = w, color = 'b', edgecolor = 'b' , label='Sim')
-#axis.scatter(success[20:60],theoPB[20:60], s=20, c='r', marker="o", label='PB(k)')
+hist = axis.hist(Nsuccess,bins = 40, weights = w, color = 'w', edgecolor = 'b' , label='Sim')
 axis.plot(success[20:60],theoPB[20:60], c='r', marker="o", label='PB(k)')
+hist2 = axis.hist(pchangedata,bins = 40, weights = w, color = 'g', edgecolor = 'b' , label='Sim2')
 
-axis.legend(loc='upper right')
 
 font = {'fontname' : 'Times New Roman' , 'size' : 20}
+axis.legend(loc='upper right',fontsize = 20)
+#axis.set_title('avg = %1.3f' %avg + ' , var = %1.3f' %stdN ,**font)
+
+#axis.set_title('Solar flares over 1000 days',**font)
+axis.set_xlabel('successes',**font)
+axis.set_ylabel('P(k)',**font)
+plt.xticks(fontsize = 25)
+plt.yticks(fontsize = 25)
+
+
+
+# plot for P(k) and simulation with probability variable
+
+
+figure2, axis = plt.subplots(1, 1,constrained_layout=True)
+
+
+hist = axis.hist(pchangedata,bins = 40, weights = w, color = 'w', edgecolor = 'b' , label='Sim')
+#axis.plot(success[20:60],theoPB[20:60], c='r', marker="o", label='PB(k)')
+
+
+font = {'fontname' : 'Times New Roman' , 'size' : 20}
+axis.legend(loc='upper right',fontsize = 20)
 #axis.set_title('avg = %1.3f' %avg + ' , var = %1.3f' %stdN ,**font)
 
 #axis.set_title('Solar flares over 1000 days',**font)
@@ -49,8 +86,6 @@ axis.set_xlabel('successes',**font)
 axis.set_ylabel('P',**font)
 plt.xticks(fontsize = 25)
 plt.yticks(fontsize = 25)
-
-
 
 plt.show()
 
