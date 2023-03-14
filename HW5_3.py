@@ -43,7 +43,6 @@ for i in range(0,experiments):
 fracininterval = count/experiments
 print(fracininterval)
 
-#mean3prob = [x/sum(mean3count) for x in mean3count]
 
 mean4 = []
 
@@ -63,7 +62,7 @@ print(fracininterval)
 
 figure, axis = plt.subplots(1, 1,constrained_layout=True)
 
-axis.hist(mean3, bins = 100 ,stacked = True , density = True)
+axis.hist(mean3, bins = 1 ,stacked = True , density = True)
 
 #axis.bar(mean3,mean3prob, color = 'w', edgecolor = 'b' , width = 0.4, label='Sim')
 #axis.scatter(success[35:45],theoPB[35:45], s=20, c='r', marker="o", label='PB(k)')
