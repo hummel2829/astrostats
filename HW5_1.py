@@ -24,7 +24,7 @@ def PB(k):
 result = map(PB,success)
 theoPB = list(result)
 
-pchangedata = np.zeros([10000,1])
+pchangedata = np.zeros([10000,])
 for a in range(0,experiments):
     
     data = [np.random.binomial(1, p, 1)]
@@ -65,27 +65,11 @@ axis.set_ylabel('P(k)',**font)
 plt.xticks(fontsize = 25)
 plt.yticks(fontsize = 25)
 
+print(plt.axis()[0])
 
+ylines = np.arange(0,0.1,0.02)
+plt.hlines(ylines,plt.axis()[0],plt.axis()[1])
 
-# plot for P(k) and simulation with probability variable
-
-
-figure2, axis = plt.subplots(1, 1,constrained_layout=True)
-
-
-hist = axis.hist(pchangedata,bins = 40, weights = w, color = 'w', edgecolor = 'b' , label='Sim')
-#axis.plot(success[20:60],theoPB[20:60], c='r', marker="o", label='PB(k)')
-
-
-font = {'fontname' : 'Times New Roman' , 'size' : 20}
-axis.legend(loc='upper right',fontsize = 20)
-#axis.set_title('avg = %1.3f' %avg + ' , var = %1.3f' %stdN ,**font)
-
-#axis.set_title('Solar flares over 1000 days',**font)
-axis.set_xlabel('successes',**font)
-axis.set_ylabel('P',**font)
-plt.xticks(fontsize = 25)
-plt.yticks(fontsize = 25)
 
 plt.show()
 
