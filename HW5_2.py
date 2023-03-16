@@ -1,5 +1,4 @@
 
-import random
 import datetime
 import matplotlib.pyplot as plt
 import numpy as np
@@ -34,15 +33,18 @@ mininday = int(24*60)
 flaresdayarray = np.copy(flares)
 flaresdayarray.resize(ceil(minfrom1stflare[-1]/mininday),mininday)
 
-flaressuminday = np.sum(flaresdayarray,axis=1)
+#flaressuminday = np.sum(flaresdayarray,axis=1)
+
+flaressuminday = np.sum(np.random.binomial(1,0.7,(flaresdayarray.shape[0]*flaresdayarray.shape[1])).reshape((flaresdayarray.shape[0],flaresdayarray.shape[1])),axis=1)
+
 w = flaressuminday/len(flaressuminday)
-flaredayhist = np.histogram(flaressuminday,bins=len(flaressuminday),weights = w)
+flaredayhist = np.histogram(flaressuminday,bins=len(flaressuminday))
 
 
 #Binomial dist
 N = int(np.max(flaredayhist[1])+1)
-p = np.max(flaredayhist[0])
-#p = np.sum(flares)/len(allminutes)
+#p = np.max(flaredayhist[0])
+p = np.sum(flares)/len(allminutes)
 def PB(k):
     return((factorial(N)/(factorial(k)*factorial(N-k)))*(p**k)*(1-p)**(N-k))
 theoPB = list(map(PB,success[0:N]))
@@ -68,18 +70,18 @@ theoPe = list(map(Pe,success[0:N]))
 figure, axis = plt.subplots(1, 1,constrained_layout=True)
 
 
-#hist = axis.hist(flaressuminday,bins = int(np.max(flaredayhist[1])), weights = w, color = 'w', edgecolor = 'b' , label='Sim')
+hist = axis.hist(flaressuminday,bins = int(np.max(flaredayhist[1])), weights = w, color = 'w', edgecolor = 'b' , label='Sim')
 #axis.plot(success[0:N],theoPB, c='r', marker="o", label='PB(k)')
 #axis.plot(success[0:N],theoPp, c='b', marker="o", label='Pp(k)')
-axis.plot(success[1:N],theoPe[1:N], c='orange', marker="o", label='Pe(k)')
+#axis.plot(success[0:N],theoPe[0:N], c='orange', marker="o", label='Pe(k)')
 
 
 font = {'fontname' : 'Times New Roman' , 'size' : 20}
 axis.legend(loc='upper right',fontsize = 20)
 #axis.set_title('avg = %1.3f' %avg + ' , var = %1.3f' %stdN ,**font)
 
-#axis.set_title('Solar flares over 1000 days',**font)
-axis.set_xlabel('successes',**font)
+axis.set_title('exp rate parameter = 7.16',**font)
+axis.set_xlabel('flares per day',**font)
 axis.set_ylabel('P',**font)
 plt.xticks(fontsize = 25)
 plt.yticks(fontsize = 25)
