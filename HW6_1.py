@@ -62,7 +62,7 @@ a5hist = np.histogram(a5,bins)
 for i in range(0,bins):
     percent = np.sum(a5hist[0][i:-(i+1)]/10000)
     if percent <= 0.95:
-        print('95% con interval for a: ', a5hist[1][i],a5hist[1][-i+1])
+        print('HW6_1_5   95% con interval for a: ', a5hist[1][i],a5hist[1][-i+1])
         break
     
 
@@ -71,7 +71,7 @@ b5hist = np.histogram(b5,bins)
 for i in range(0,bins):
     percent = np.sum(b5hist[0][i:-(i+1)]/10000)
     if percent <= 0.95:
-        print('95% con interval for b: ',b5hist[1][i],b5hist[1][-i+1])
+        print('HW6_1_5   95% con interval for b: ',b5hist[1][i],b5hist[1][-i+1])
         break
     
 
@@ -132,7 +132,7 @@ axis.set_ylabel('number of slope values',**font)
 
 
 
-
+plt.grid()
 plt.show()
 
 
