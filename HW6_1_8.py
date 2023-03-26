@@ -37,23 +37,27 @@ for i in range(0,NB):
 ea = a8-alpha
 eb = b8-beta
 
+
 avgea = np.average(ea)
 stdea = np.std(ea)
 avgeb = np.average(eb)
 stdeb = np.std(eb)
 
+aevalues = []
+for i in range(0,NB):
+    ii = np.random.randint(0,ea.shape[0]-1,20)
+    ae,be = np.polyfit(ea[ii], eb[ii],1)
+    aevalues = np.append(aevalues,ae)
+    
+w = abs(aevalues/len(aevalues))
 
-ecorr = np.trapz(ea*eb)
-
-
-diffcorr = np.diff(eb)/np.diff(ea) #gradient of (a-alpha)(b-beta)
-print(diffcorr)
-
-
+aebins = 100
+aehist = np.histogram(aevalues,aebins)
+print(ae)
 
 figure1, axis = plt.subplots(1, 1,constrained_layout=True)
-plt.hist(ecorr)
-#axis.scatter(ea,eb, s=20, c='r', marker="o", label='exp(k)')
+plt.hist(aevalues,bins=50, weights = w)
+#axis.scatter(eb,ea, s=20, c='r', marker="o", label='exp(k)')
 #axis.scatter(successes[0:100],Pp, s=20, c='g', marker="o", label='Pp(k)')
 
 
@@ -62,11 +66,11 @@ axis.legend(loc='upper right')
 font = {'fontname' : 'Times New Roman' , 'size' : 25}
 plt.xticks(fontsize = 25)
 plt.yticks(fontsize = 25)
-axis.set_title('avg y-axis = %1.3f' %avgeb + ' , std y-axis = %1.3f' %stdeb + ',  avg y-axis = %1.3f' %avgeb + ' , std y-axis = %1.3f' %stdeb ,**font)
+#axis.set_title('avg y-axis = %1.3f' %avgeb + ' , std y-axis = %1.3f' %stdeb + ',  avg y-axis = %1.3f' %avgeb + ' , std y-axis = %1.3f' %stdeb ,**font)
 
 
-axis.set_xlabel('(sample intercept)-(population intercept)',**font)
-axis.set_ylabel('(sample slope)-(population slope)',**font)
+#axis.set_xlabel('(sample intercept)-(population intercept)',**font)
+#axis.set_ylabel('(sample slope)-(population slope)',**font)
 
 
 figure2, axis = plt.subplots(1, 1,constrained_layout=True)
@@ -84,7 +88,7 @@ axis.set_xlabel('(index)',**font)
 axis.set_ylabel('(intensity)',**font)
 
 
-
+plt.grid()
 plt.show()
 
 
