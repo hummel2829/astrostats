@@ -12,6 +12,7 @@ psuc = []
 nsuc = []
 
 
+
 Nsuccess = np.random.binomial(N, p, experiments)
 Psuccess = Nsuccess/N
 w = np.ones_like(Nsuccess)/len(Nsuccess)
@@ -70,7 +71,7 @@ print(plt.axis()[0])
 ylines = np.arange(0,0.1,0.02)
 plt.hlines(ylines,plt.axis()[0],plt.axis()[1])
 
-
+plt.grid()
 plt.show()
 
 
