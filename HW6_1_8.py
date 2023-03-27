@@ -49,11 +49,10 @@ for i in range(0,NB):
     ae,be = np.polyfit(ea[ii], eb[ii],1)
     aevalues = np.append(aevalues,ae)
     
-w = abs(aevalues/len(aevalues))
+w = abs(np.ones(len(aevalues))/len(aevalues))
 
-aebins = 100
-aehist = np.histogram(aevalues,aebins)
-print(ae)
+aebins = 50
+aehist = np.histogram(aevalues,aebins, weights=w)
 
 figure1, axis = plt.subplots(1, 1,constrained_layout=True)
 plt.hist(aevalues,bins=50, weights = w)
