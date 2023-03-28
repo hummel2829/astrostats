@@ -3,13 +3,9 @@ import random
 import datetime
 import matplotlib.pyplot as plt
 import numpy as np
-from math import factorial
-from math import exp
 from math import ceil
 
 
-
-################### use np array of 1s and 0s NOT list 
 
 
 
@@ -33,6 +29,37 @@ np.put(allminutes, minfrom1stflare, 1)
 
 flares = allminutes.astype(int)
 
+mininhour = int(60)
+
+flareshourarray = np.copy(flares)
+flareshourarray.resize(ceil(minfrom1stflare[-1]/mininhour),mininhour)
+
+flaressuminhour = np.sum(flareshourarray,axis=1)
+
+fgivenf = 0
+fgivennf = 0
+nfgivenf = 0
+nfgivennf = 0
+
+for i in range(0,len(flaressuminhour)-1):
+    if flaressuminhour[i] > 0 and flaressuminhour[i+1] > 0:
+        fgivenf = fgivenf + 1
+    if flaressuminhour[i] == 0 and flaressuminhour[i+1] > 0:
+        fgivennf = fgivennf + 1
+    if flaressuminhour[i] > 0 and flaressuminhour[i+1] == 0:
+        nfgivenf = nfgivenf + 1
+    if flaressuminhour[i] == 0 and flaressuminhour[i+1] == 0:
+        nfgivennf = nfgivennf + 1
+
+Pfgivenf = fgivenf/(len(flaressuminhour)-1)
+Pfgivennf = fgivennf/(len(flaressuminhour)-1)
+Pnfgivenf = nfgivenf/(len(flaressuminhour)-1)
+Pnfgivennf = nfgivennf/(len(flaressuminhour)-1) 
+
+
+
+
+
 mininday = int(24*60)
 
 flaresdayarray = np.copy(flares)
@@ -44,16 +71,14 @@ flaresweekarray = np.copy(flaresdayarray)
 mininweek = 7*mininday
 flaresweekarray.resize(ceil(minfrom1stflare[-1]/mininweek),mininweek)
 
-flaressuminweek = np.sum(flaresweekarray,axis=1)
+#flaressuminweek = np.sum(flaresweekarray,axis=1)
 
 
-flares2weekarray = np.copy(flaresdayarray)
-minin2week = 14*mininday
-flares2weekarray.resize(ceil(minfrom1stflare[-1]/minin2week),minin2week)
+#flares2weekarray = np.copy(flaresdayarray)
+#minin2week = 14*mininday
+#flares2weekarray.resize(ceil(minfrom1stflare[-1]/minin2week),minin2week)
 
-flaresavgin2week = np.average(flares2weekarray,axis=1)
-
-
+#flaresavgin2week = np.average(flares2weekarray,axis=1)
 
 
 
@@ -66,20 +91,20 @@ flaresavginmonth = np.average(flaresinmonth, axis =1)
 months = np.arange(0,flaresavginmonth.shape[0])
 
 
-avgfirst10 = np.average(flaresavginmonth[0:10])
-stdfirst10 = np.std(flaresavginmonth[0:10])
+#avgfirst10 = np.average(flaresavginmonth[0:10])
+#stdfirst10 = np.std(flaresavginmonth[0:10])
 
-avglast10 = np.average(flaresavginmonth[-1:(months[-1]-11):-1])
-stdlast10 = np.std(flaresavginmonth[-1:(months[-1]-11):-1])
+#avglast10 = np.average(flaresavginmonth[-1:(months[-1]-11):-1])
+#stdlast10 = np.std(flaresavginmonth[-1:(months[-1]-11):-1])
 
 a,b = np.polyfit(months, flaresavginmonth,1)
 
 
-figure, axis = plt.subplots(1, 1,constrained_layout=True)
+figure1, axis = plt.subplots(1, 1,constrained_layout=True)
 
-axis.scatter(months, flaresavginmonth, s=20, c='r', marker="o", label='exp(k)')
-axis.plot(months, months*a +b)
-#axis.plot(flaresavginmonth, 'or')
+#axis.scatter(months, flaresavginmonth, s=20, c='r', marker="o", label='exp(k)')
+#axis.plot(months, months*a +b)
+axis.plot(flaresmonthsum/31)
 #axis.plot(np.unique(x), np.poly1d(np.polyfit(x, y, 1))(np.unique(x)))
 #axis.plot(flaressuminday, 'or')
 #axis.plot(flaresavgin2week, 'or')
@@ -100,15 +125,26 @@ axis.set_ylabel('P',**font)
 plt.show()
 
 
+#average flare/day by month
 
+figure2, axis = plt.subplots(1, 1,constrained_layout=True)
 
-A = np.array([1,2,3,5])
+axis.scatter(months, flaresmonthsum/31, s=20, c='r', marker="o", label='exp(k)')
+axis.plot(months, months*a +b)
 
-A.resize(3,2)
-print(A)
+axis.legend(loc='upper right')
 
-B = np.sum(A,axis=1)
-print(B)
+font = {'fontname' : 'Times New Roman' , 'size' : 25}
+plt.xticks(fontsize = 25)
+plt.yticks(fontsize = 25)
+
+#axis.set_title('avg intercept = %1.3f' %avga5 + ' , std intercept = %1.3f' %stda5 ,**font)
+axis.set_xlabel('avg flares/day',**font)
+axis.set_ylabel('month',**font)
+
+plt.grid()
+plt.show()
+
 
 
 
