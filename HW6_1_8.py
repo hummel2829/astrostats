@@ -49,10 +49,20 @@ for i in range(0,NB):
     ae,be = np.polyfit(ea[ii], eb[ii],1)
     aevalues = np.append(aevalues,ae)
     
-w = abs(np.ones(len(aevalues))/len(aevalues))
+w = abs(np.ones(len(aevalues))/len(aevalues)) #used to normalize histograms
 
 aebins = 50
-aehist = np.histogram(aevalues,aebins, weights=w)
+aehist = np.histogram(aevalues,aebins, weights = w)
+
+for i in range(0,aebins):
+    percent = np.sum(aehist[0][i:-(i+1)])
+    if percent <= 0.95:
+        print('HW6_1_8   95% con interval for slope error vs intercept error: ',aehist[1][i],aehist[1][-(i+1)])
+        lowbound = aehist[1][i]
+        upbound = aehist[1][-(i+1)]
+        break
+    
+
 
 figure1, axis = plt.subplots(1, 1,constrained_layout=True)
 plt.hist(aevalues,bins=50, weights = w)
@@ -65,6 +75,11 @@ axis.legend(loc='upper right')
 font = {'fontname' : 'Times New Roman' , 'size' : 25}
 plt.xticks(fontsize = 25)
 plt.yticks(fontsize = 25)
+
+axis.axvline( x = upbound, color = 'b', label = '2.5% ->')
+axis.text(upbound, np.max(aehist[0]), '2.5% ->',**font)
+axis.axvline( x = lowbound, color = 'b', label = '<- 2.5%')
+axis.text(lowbound, np.max(aehist[0]), '<- 2.5%', horizontalalignment='right',**font)
 #axis.set_title('avg y-axis = %1.3f' %avgeb + ' , std y-axis = %1.3f' %stdeb + ',  avg y-axis = %1.3f' %avgeb + ' , std y-axis = %1.3f' %stdeb ,**font)
 
 
