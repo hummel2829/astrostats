@@ -1,0 +1,116 @@
+import matplotlib.pyplot as plt
+import numpy as np
+from math import sqrt
+
+
+N = 1000
+NB = 10000
+n = 20
+alpha = 1
+beta = 1
+sigma = 0.2
+
+eps = np.random.normal(0,sigma,N)
+x = np.arange(0,N)/N
+y = beta*x + alpha + eps
+
+pairs = np.array([x,y]).T
+
+rng = np.random.default_rng()
+n20 = rng.choice(pairs,n)
+
+#HW6_1 question 8
+
+rng = np.random.default_rng()
+nbootraw = rng.choice(pairs,(n*NB))
+
+nboot = np.reshape(nbootraw,[NB,n,2])
+a8 = []
+b8 = []
+
+for i in range(0,NB):
+    a, b = np.polyfit(nboot[i,:,0],nboot[i,:,1],1)
+    a8 = np.append(a8,a)
+    b8 = np.append(b8,b)
+
+
+ea = a8-alpha
+eb = b8-beta
+
+
+avgea = np.average(ea)
+stdea = np.std(ea)
+avgeb = np.average(eb)
+stdeb = np.std(eb)
+
+aevalues = []
+for i in range(0,NB):
+    ii = np.random.randint(0,ea.shape[0]-1,20)
+    ae,be = np.polyfit(eb[ii], ea[ii],1)
+    aevalues = np.append(aevalues,ae)
+    
+w = abs(np.ones(len(aevalues))/len(aevalues)) #used to normalize histograms
+
+aebins = 50
+aehist = np.histogram(aevalues,aebins, weights = w)
+
+for i in range(0,aebins):
+    percent = np.sum(aehist[0][i:-(i+1)])
+    if percent <= 0.95:
+        print('HW6_1_8   95% con interval for slope error vs intercept error: ',aehist[1][i],aehist[1][-(i+1)])
+        lowbound = aehist[1][i]
+        upbound = aehist[1][-(i+1)]
+        break
+    
+
+
+figure1, axis = plt.subplots(1, 1,constrained_layout=True)
+plt.hist(aevalues,bins=50, weights = w)
+
+
+
+font = {'fontname' : 'Times New Roman' , 'size' : 25}
+plt.xticks(fontsize = 25)
+plt.yticks(fontsize = 25)
+
+axis.axvline( x = upbound, color = 'b', label = '2.5% ->')
+axis.text(upbound, np.max(aehist[0]), '2.5% ->',**font)
+axis.axvline( x = lowbound, color = 'b', label = '<- 2.5%')
+axis.text(lowbound, np.max(aehist[0]), '<- 2.5%', horizontalalignment='right',**font)
+
+axis.set_title('avg slope = %1.3f' %np.mean(aevalues) + ' , std of slope = %1.3f' %np.std(aevalues) ,**font)
+axis.set_xlabel('Percent',**font)
+axis.set_ylabel('slope values',**font)
+
+
+figure2, axis = plt.subplots(1, 1,constrained_layout=True)
+
+axis.plot(eb[0:100]*ea[0:100],'ro')
+
+axis.legend(loc='upper right')
+
+font = {'fontname' : 'Times New Roman' , 'size' : 20}
+plt.xticks(fontsize = 25)
+plt.yticks(fontsize = 25)
+
+axis.set_title('(a-alpha)*(b-beta)',**font)
+axis.set_xlabel('(index)',**font)
+axis.set_ylabel('(intensity)',**font)
+
+
+plt.grid()
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
