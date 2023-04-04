@@ -45,6 +45,14 @@ pd = np.reshape(pdata,(100,100))
 
 pdbootmean = np.average(np.random.choice(pdata,[10000,20]),axis=1)
 
+#Hnull is pdbootmean == stdpdata
+#Halt is pdbootmean not= stdpdata
+#alpha = 99.5, Z table value 2.58, significance level 0.01
+
+zpd = (np.mean(pdbootmean) - np.std(pdata))/(np.std(pdbootmean)/(10000**0.5))
+
+# -2.58 < zpd=1.34 < 2.59 so cannot reject Hnull
+
 pdmeanhist = np.histogram(pdbootmean, bins = 100)
 
 pstd = np.std(pdata)
@@ -60,11 +68,21 @@ subpdata = np.random.poisson(lam,measurements)
 
 subpd = np.reshape(subpdata,(100,100))
 
-subpdrowmean = np.average(subpd,axis=1)
 
-substd = np.std(subpdata)
+subpdbootmean = np.average(np.random.choice(subpdata,[10000,20]),axis=1)
+
+#Hnull is subpdbootmean == stdsubpdata
+#Halt is subpdbootmean not= stdsubpdata
+#alpha = 99.5, Z table value 2.58, significance level 0.01
+
+zsubpd = (np.mean(subpdbootmean) - np.std(subpdata))/(np.std(subpdbootmean)/(10000**0.5))
+
+# -2.58 < zsubpd = 7244 so can reject Hnull
 
 subpdatahist = np.histogram(subpdata,bins=np.max(subpdata)+1)
+
+
+
 
 
 #super poisson sim
@@ -76,9 +94,20 @@ superpdata = np.random.poisson(lam,measurements)
 
 superpd = np.reshape(superpdata,(100,100))
 
-superpdrowmean = np.average(superpd,axis=1)
 
-superstd = np.std(superpdata)
+superpdbootmean = np.average(np.random.choice(superpdata,[10000,20]),axis=1)
+
+#Hnull is subpdbootmean == stdsubpdata
+#Halt is subpdbootmean not= stdsubpdata
+#alpha = 99.5, Z table value 2.58, significance level 0.01
+
+zsuperpd = (np.mean(superpdbootmean) - np.std(superpdata))/(np.std(superpdbootmean)/(10000**0.5))
+
+# -2.58 < zsuperpd = 7369 so can reject Hnull
+
+
+
+
 
 superpdatahist = np.histogram(superpdata,bins=np.max(superpdata)+1)
 
