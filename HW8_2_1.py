@@ -27,7 +27,7 @@ for x in range(0,N):
             s = s + (z[x][i] - np.mean(z))*(z[x][i+k] - np.mean(z))
             #print(i, i+k)
             i = i + 1
-        c[x][k] = s
+        c[x][k] = s/len(z[0])
         
 r = c/c[0]
 
@@ -48,11 +48,36 @@ ztest = (np.mean(rboot) - np.mean(p))/(np.std(rboot))
 print(ztest)
 
 
+# question 4
+
+varr = np.zeros(len(p))
+for k in range(0,len(p)):
+    s = 0
+    v = 0
+    while v-k > 0:
+        #s = s + p[v]**2 + p[v+k]*p[v-k] - 4*p[k]*p[v]*p[v-k] + 2*p[v]*p[k]*p[v]*p[k]
+        v = v + 1
+    varr[k] = s/len(p)
+
+
+
+# 8_2_2
+
+wa = np.zeros([N,2])
+for i in range(0,N):
+    wa[i][0] = z[i][1]*(1 - z[i][2]) / (1 - z[i][1]**2)
+    wa[i][1] = (z[i][2] - z[i][1]**2) / (1 - z[i][1]**2)
+
+# 99% CI -> z_0.005 -> z = +/- 2.33
+
+
+
+
 
 figure1, axis = plt.subplots(1, 1,constrained_layout=True)
-#axis.scatter(r,, s=20, c='r', marker="o", label='exp(k)')
-axis.plot(r, color = "red", label='k')
-axis.plot(p, color = "blue", label='p')
+axis.hist(wa[:,0])
+#axis.plot(r, color = "red", label='k')
+#axis.plot(p, color = "blue", label='p')
 
 
 axis.legend(loc='upper right')
