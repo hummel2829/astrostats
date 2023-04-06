@@ -24,8 +24,6 @@ for k in range(0,N):
     while t+k < N:
         s = s + (z[t] - np.mean(z))*(z[t+k] - np.mean(z))
         t = t + 1
-        if k == 1:
-            r1[t] = 
     c[k] = s/(N-1)
         
 r = c/c[0]
@@ -46,8 +44,20 @@ for m in range(3,N):
 
 # 99% CI -> z_0.005 -> z = +/- 2.33
 
-ztest = (np.mean(rboot) - np.mean(p))/(np.std(rboot))
-print(ztest)
+
+c1 = np.zeros(N)
+t = 0
+while t+1 < N:
+    c1[t] = (1/(t+1))*(z[t] - np.mean(z))*(z[t+1] - np.mean(z))
+    t = t + 1
+    
+        
+r1 = np.cumsum(c1)/c[0]
+
+r1boot = np.random.normal(np.mean(r1) , np.std(r1) , size = 1000)
+
+ztestr1 = (np.mean(r1boot) - np.mean(r1))/(np.std(r1boot)/1000**0.5)
+print(ztestr1)
 
 
 # question 4
@@ -57,7 +67,7 @@ for k in range(0,len(p)):
     s = 0
     v = 0
     while v-k > 0:
-        #s = s + p[v]**2 + p[v+k]*p[v-k] - 4*p[k]*p[v]*p[v-k] + 2*p[v]*p[k]*p[v]*p[k]
+        s = s + p[v]**2 + p[v+k]*p[v-k] - 4*p[k]*p[v]*p[v-k] + 2*p[v]*p[k]*p[v]*p[k]
         v = v + 1
     varr[k] = s/len(p)
 
@@ -65,25 +75,48 @@ for k in range(0,len(p)):
 
 # 8_2_2
 
-wa = np.zeros([N,2])
-for i in range(0,N):
-    wa[i][0] = z[i][1]*(1 - z[i][2]) / (1 - z[i][1]**2)
-    wa[i][1] = (z[i][2] - z[i][1]**2) / (1 - z[i][1]**2)
+c2 = np.zeros(N)
+t = 0
+while t+2 < N:
+    c2[t] = (1/(t+1))*(z[t] - np.mean(z))*(z[t+2] - np.mean(z))
+    t = t + 1
+    
+        
+r2 = np.cumsum(c2)/c[0]
+
+r2boot = np.random.normal(np.mean(r2) , np.std(r2) , size = 1000)
+
+
+wa1 = r1*(1-r2)/(1-r1**2)
+wa2 = (r2 - r1**2)/(1-r1**2)
+
+wa1boot = np.random.normal(np.mean(wa1) , np.std(wa1) , size = 1000)
+wa2boot = np.random.normal(np.mean(wa2) , np.std(wa2) , size = 1000)
+
+# 99% CI -> z_0.005 -> z = +/- 2.33
+
+ztestwa1 = (np.mean(wa1boot) - np.mean(a1))/(np.std(wa1boot)/1000**0.5)
+print(ztestwa1)
+
+ztestwa2 = (np.mean(wa2boot) - np.mean(a2))/(np.std(wa2boot)/1000**0.5)
+print(ztestwa2)
+
 
 # 99% CI -> z_0.005 -> z = +/- 2.33
 
 
 #8_2_3
 
+vareps = (1 - a1*p[1] + a2*p[2])*np.std(z)
 
 
 
 
 
 figure1, axis = plt.subplots(1, 1,constrained_layout=True)
-#axis.hist()
-axis.plot(r, color = "red", label='k')
-axis.plot(p, color = "blue", label='p')
+axis.hist(rboot)
+#axis.plot(r, color = "red", label='k')
+#axis.plot(p, color = "blue", label='p')
 
 
 axis.legend(loc='upper right')
