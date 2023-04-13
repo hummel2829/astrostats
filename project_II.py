@@ -36,11 +36,7 @@ for j in range(0,lagmax):
 
 
 
-np.mean(NVch1) < np.std(NVch1)**2 #True mean < var
 avgtimeinterval = np.mean(NVch1)
-
-intervalcountmean = np.mean(ch1hist[0])
-intervalcountstd = np.std(ch1hist[0])
 
 
 figure1, axis = plt.subplots(1, 1,constrained_layout=True)
