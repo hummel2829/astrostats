@@ -37,7 +37,7 @@ I_f = (N/2)*((a0+a)**2 + b**2)
 
 
 #### parametric bootstrap
-sample = 100
+sample = 1000
 
 aboot = np.zeros(sample)
 bboot = np.zeros(sample)
@@ -57,14 +57,8 @@ for h in range(0,sample):
     bboot[h] = s*2/N
     a0boot[h] = a0sum/N
 
-If2sample =  (N/2)*((a0boot+aboot)**2 + bboot**2)
+If2boot =  (N/2)*((a0boot+aboot)**2 + bboot**2)
 
-
-
-If2bootdist = np.random.normal(loc = np.mean(If2sample), scale = np.std(If2sample),size = 10000)
-
-If2bootsample = np.random.choice(If2bootdist,size = [10,1000])
-If2bootsamplemean = np.average(If2bootsample,axis = 0)
 
 t = 3.25 #alpha = 0.01 and degrees of freedom = sample-1 = 10, from table in Devore
 UB = (np.mean(If2bootsample) + (t*np.std(If2bootsample)/(1000**0.5)))
@@ -91,7 +85,7 @@ axis.set_xlabel('Intensity(Arb. Units)',**font)
 figure2, axis = plt.subplots(1, 1,constrained_layout=True)
 
 #axis.plot(x,minbhist[0], c='r', marker="o", label='poisson light')
-axis.hist(If2bootdist,bins=50)
+axis.hist(If2sample,bins=50)
 
 #axis.legend(loc='upper right',fontsize = 25)
 
