@@ -6,17 +6,24 @@ from math import factorial
 from math import exp
 from math import ceil
 
-
+debug = False
 
 
 filename = 'xray.txt'
 xraydata = np.loadtxt(filename)
 xraydata = xraydata.astype(int)
 
+xraydata = xraydata[0:10,:]
+#import numpy as np
+#xraydata = np.arange(24*60*3,dtype=np.int_)
+#xraydata = [i for i in range(0,24*60*3)]
+
 rows =[*range(0,xraydata.shape[0])]
-
-
+if debug:
+    print(rows)
 dates = [datetime.datetime(*x) for x in xraydata]
+if debug:
+    print(dates)
 success = [*range(0,len(dates))]
 
 #minutes from first flare

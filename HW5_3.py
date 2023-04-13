@@ -62,6 +62,7 @@ print(fracininterval)
 
 figure, axis = plt.subplots(1, 1,constrained_layout=True)
 
+# Plot should have gaussian shape. I see a big blue box.
 axis.hist(mean3, bins = 1 ,stacked = True , density = True)
 
 #axis.bar(mean3,mean3prob, color = 'w', edgecolor = 'b' , width = 0.4, label='Sim')
@@ -78,6 +79,7 @@ axis.set_title('mean74 = %1.2f' %meanG10 + ', mean715 %1.2f' %meanG10  ,**font)
 axis.set_xlabel('successes',**font)
 axis.set_ylabel('P',**font)
 
+# Usually print [low, high] for CI
 txt = 'CI74 = (%1.2f' %interval74[1] + ', %1.2f)' %interval74[0] + '   CI715 = (%1.2f' %interval715[1] + ', %1.2f)' %interval715[0]
 plt.figtext(0.5, -0.1, txt, wrap=True, horizontalalignment='center', fontsize=12)
 
