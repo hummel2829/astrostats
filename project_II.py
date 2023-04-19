@@ -20,21 +20,6 @@ x1stdiff = np.arange(0,NVch1t1stdiff.shape[1])
 ch1hist = np.histogram(NVch1t1stdiff,bins=100)
 xx = np.arange(0,100)
 
-lagmax = 100
-pearcorrcoff = np.zeros(lagmax)
-for j in range(0,lagmax):
-    lag = j #number of positions away from initial poisition for product(i.e. avr = 3 is product of 1st & 4th, 2nd & 5th etc)
-    pearsonprodch1 = np.zeros(NVch1t1stdiff.shape[1])
-    meandiff0 = NVch1t1stdiff[0]-np.mean(NVch1t1stdiff)
-    
-    for i in range (0,NVch1t1stdiff.shape[1]-lag):
-        pearsonprodch1[i] = (meandiff0[i])*(meandiff0[i+lag])
-        
-    pearcorrcoff[i] = np.mean(pearsonprodch1)/np.std(NVch1t1stdiff)**2
-    print(pearcorrcoff)
-
-
-
 
 avgtimeinterval = np.mean(NVch1)
 
