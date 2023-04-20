@@ -4,7 +4,10 @@ import numpy as np
 from numpy.fft import fft
 from math import floor
 
-freq = 0.2
+#look up np.allclose
+
+
+freq = 40
 
 ############# from HW9
 
@@ -13,8 +16,8 @@ N = 1000
 
 q = N/2 #N is even so N=2q
 i = np.arange(0,q)
-#f = floor(freq) + i/(N/1)
-f = np.arange(0,q/1000,1/1000)
+f = i/N
+#f = np.arange(0,q/1000,1/1000)
 
 # N is even so bq = 0
 a0 = np.zeros(int(q))
@@ -29,7 +32,7 @@ for j in range(0,len(i)):
         signal = 2*np.sin(2*np.pi*freq*t)
         c = c + signal*np.cos(2*np.pi*f[j]*t)
         s = s + signal*np.sin(2*np.pi*f[j]*t)
-        print(s)
+        
         a0sum = a0sum + signal
 
         
@@ -37,16 +40,15 @@ for j in range(0,len(i)):
     a[j] = (2/N)*c
     b[j] = (2/N)*s
 
-I_f = (N/2)*((a0+a)**2 + b**2)
+I_f = (N/2)*((a)**2 + b**2)
 
 
 ######################################
-
 '''
 
-samplerate = 1000
+samplerate = 10000
 t = np.arange(0,1,(1/samplerate))
-pad = 1000
+pad = 0
 
 y = 2*np.sin(2*np.pi*freq*t)
 y = np.append(y,np.zeros(pad))
@@ -71,7 +73,7 @@ axis[0].scatter(t, y, s=50, c='r', marker="o", label='interval count')
 axis[1].scatter(freq, np.abs(fftsin), s=50, c='r', marker="o", label='interval count')
 #m,stem,base = axis[1].stem(freq, np.abs(fftsin), label='interval count')
 #stem.set_linewidth(10)
-plt.xlim(0,10)
+plt.xlim(0,100)
 
 
 
@@ -85,15 +87,14 @@ plt.ticklabel_format(axis='both', style='plain')
 
 #axis.set_title('mean of counts = %1.3f' %intervalcountmean + ' , std interval counts = %1.3f' %intervalcountstd + ' ,**font)
 
-axis[0].set_ylabel('counts',**font)
-axis[0].set_xlabel('time between photon counts (picoseconds',**font)
+axis[0].set_xlabel('frequency (Hz)',**font)
+axis[0].set_ylabel('Intensity(Arb. Units)',**font)
 
 '''
 
 figure2, axis = plt.subplots(1, 1,constrained_layout=True)
 
-#axis.plot(x,minbhist[0], c='r', marker="o", label='poisson light')
-axis.scatter( f, I_f, s=50, c='r', marker="o", label='interval count')
+axis.scatter( f*100, I_f, s=50, c='r', marker="o")
 
 
 #axis.legend(loc='upper right',fontsize = 25)
@@ -102,9 +103,9 @@ font = {'fontname' : 'Times New Roman' , 'size' : 25}
 plt.xticks(fontsize = 25)
 plt.yticks(fontsize = 25)
 
-axis.set_title('Fourier spectrum of white noise',**font)
-axis.set_ylabel('frequency (Hz)',**font)
-axis.set_xlabel('Intensity(Arb. Units)',**font)
+axis.set_title('Fourier spectrum HW9',**font)
+axis.set_xlabel('frequency (Hz)',**font)
+axis.set_ylabel('Intensity(Arb. Units)',**font)
 
 
 
