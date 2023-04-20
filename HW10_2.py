@@ -38,7 +38,12 @@ for j in range(0,len(i)):
     b[j] = (2/N)*s
 
 I_f = (N/2)*((a0+a)**2 + b**2)
-
+# (a0 + a) is not correct. Should be
+I_f[0] = (N/2)*a0**2
+I_f[1] = (N/2)*(a[0]**2 + b[0]**2)
+# etc.
+# Or, make a[0] = a0 and b[0] = 0 so you can do
+# I_f = N/2)*(a**2 + b**2)
 
 ######################################
 
