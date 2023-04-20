@@ -2,17 +2,19 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from numpy.fft import fft
+from math import floor
 
-freq = 4.5
+freq = 0.2
 
 ############# from HW9
-'''
+
 N = 1000
 
 
 q = N/2 #N is even so N=2q
 i = np.arange(0,q)
-f = i/(N/1)
+#f = floor(freq) + i/(N/1)
+f = np.arange(0,q/1000,1/1000)
 
 # N is even so bq = 0
 a0 = np.zeros(int(q))
@@ -27,6 +29,7 @@ for j in range(0,len(i)):
         signal = 2*np.sin(2*np.pi*freq*t)
         c = c + signal*np.cos(2*np.pi*f[j]*t)
         s = s + signal*np.sin(2*np.pi*f[j]*t)
+        print(s)
         a0sum = a0sum + signal
 
         
@@ -36,14 +39,13 @@ for j in range(0,len(i)):
 
 I_f = (N/2)*((a0+a)**2 + b**2)
 
-'''
+
 ######################################
 
-
+'''
 
 samplerate = 1000
-sampleinterval = 1/samplerate
-t = np.arange(0,1,sampleinterval)
+t = np.arange(0,1,(1/samplerate))
 pad = 1000
 
 y = 2*np.sin(2*np.pi*freq*t)
@@ -73,7 +75,6 @@ plt.xlim(0,10)
 
 
 
-#axis.semilogy(ch1hist[1][0:barindex[0][-1]],ch1hist[0][0:barindex[0][-1]], color = 'blue')
 
 #axis.legend(loc='upper right',fontsize = 25)
 
@@ -105,7 +106,7 @@ axis.set_title('Fourier spectrum of white noise',**font)
 axis.set_ylabel('frequency (Hz)',**font)
 axis.set_xlabel('Intensity(Arb. Units)',**font)
 
-'''
+
 
 
 plt.grid()
