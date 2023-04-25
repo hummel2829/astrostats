@@ -34,6 +34,7 @@ pstd = np.std(pdata)
 
 pdatahist = np.histogram(pdata,bins=np.max(pdata)+1)
 
+'''
 #sub poisson sim
 
 photonrate = 3e8 #photon/second
@@ -85,9 +86,9 @@ zsuperpd = (np.mean(superpdbootmean) - np.std(superpdata)**2)/(np.std(superpdboo
 
 
 superpdatahist = np.histogram(superpdata,bins=np.max(superpdata)+1)
-
-
 '''
+
+
 
 
 figure1, axis = plt.subplots(1, 1,constrained_layout=True)
@@ -97,7 +98,7 @@ figure1, axis = plt.subplots(1, 1,constrained_layout=True)
 px = np.arange(0,np.max(pdata)+1)
 axis.plot(px,pdatahist[0], c='r', marker="o", label='poisson light')
 #axis.scatter(px,pdatahist[0], s=100, c='r', marker="o", label='poisson light')
-
+'''
 subx = np.arange(0,np.max(subpdata)+1)
 axis.scatter(subx,subpdatahist[0], s=100, c='b', marker="o", label='sub poisson light')
 
@@ -105,7 +106,7 @@ axis.scatter(subx,subpdatahist[0], s=100, c='b', marker="o", label='sub poisson 
 superx = np.arange(0,np.max(superpdata)+1)
 axis.plot(superx,superpdatahist[0], c='g', marker="o", label='super poisson light')
 #axis.scatter(superx,superpdatahist[0], s=100, c='g', marker="o", label='super poisson light')
-
+'''
 
 
 #axis.plot(x , pdatahist[0] , color="red")
@@ -139,7 +140,7 @@ plt.yticks(fontsize = 25)
 
 
 
-'''
+
 
 
 
