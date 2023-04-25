@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numpy.fft import fft
 from math import floor
+from math import ceil
 
 #look up np.allclose
 
