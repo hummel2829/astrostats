@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from math import ceil
 
-'''
+
 
 filename = r'D:\Python\picoquant\antibunch\NV-Center_for_Antibunching_1.out'
 NVdata = np.loadtxt(filename, delimiter = ',', usecols = (0,1,2), skiprows = 1)
@@ -43,7 +43,7 @@ NV01 = np.where(NV0 == 0, NV0, 1)
 # approx 1513063887ps per row
 NV01counts = np.sum(NV01,axis=1)
 
-'''
+
 
 
 
