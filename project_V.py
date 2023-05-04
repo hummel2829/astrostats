@@ -61,7 +61,7 @@ while (np.abs(lamvalue[i-1]-lamvalue[i-2])/lamvalue[i-2]) > 0.005:
 #################################
 
 #################### poisson sim
-lambda1 = 1/avgexp_unitless # 1/ (time per photon)
+lambda1 = (1/avgexp_unitless) # 1/ (time per photon)
 
 lambda2 = -mfit # slope naive line fit = -m 
 
@@ -91,6 +91,21 @@ pd3 = np.reshape(pdata3,(100,100))
 pdata4 = pdata[:,3]
 pd4 = np.reshape(pdata4,(100,100))
 
+
+w1 = np.ones(len(pdata1))/len(pdata1)
+pdata1prob, pdata1binedge = np.histogram(pdata1,bins=np.max(pd1)+1, weights = w1)
+
+w2 = np.ones(len(pdata2))/len(pdata2)
+pdata2prob, pdata2binedge = np.histogram(pdata2,bins=np.max(pd2)+1, weights = w2)
+
+w3 = np.ones(len(pdata3))/len(pdata3)
+pdata3prob, pdata3binedge = np.histogram(pdata3,bins=np.max(pd3)+1, weights = w3)
+
+w4 = np.ones(len(pdata4))/len(pdata4)
+pdata4prob, pdata4binedge = np.histogram(pdata4,bins=np.max(pd4)+1, weights = w4)
+
+
+
 ############# exp sim
 
 t = binsc
@@ -105,6 +120,7 @@ exp4 = lambda4*np.exp(-lambda4*t)
 
 
 #################################
+
 
 
 figure1, axis = plt.subplots(1, 1,constrained_layout=True)
@@ -144,6 +160,30 @@ plt.yticks(fontsize = 25)
 axis.set_xlabel('delta_t/delta',**font)
 axis.set_ylabel('pmf',**font)
 
+
+
+figure3, axis = plt.subplots(1, 1,constrained_layout=True)
+x1 = pdata1binedge[0:-1]+(pdata1binedge[1] - pdata1binedge[0])/2
+x2 = pdata2binedge[0:-1]+(pdata2binedge[1] - pdata2binedge[0])/2
+x3 = pdata3binedge[0:-1]+(pdata3binedge[1] - pdata3binedge[0])/2
+x4 = pdata4binedge[0:-1]+(pdata4binedge[1] - pdata4binedge[0])/2
+
+axis.bar( x1, pdata1prob, alpha = 0.5, color = 'blue', label='interval count')
+#axis.bar( x2, pdata2prob, alpha = 0.5, color = 'red', label='interval count')
+#axis.bar( x3, pdata3prob, alpha = 0.5, color = 'orange', label='interval count')
+#axis.bar( x4, pdata4prob, alpha = 0.5, color = 'purple', label='interval count')
+
+#axis.legend(loc='upper right',fontsize = 25)
+
+font = {'fontname' : 'Times New Roman' , 'size' : 25}
+plt.xticks(fontsize = 25)
+plt.yticks(fontsize = 25)
+#plt.ticklabel_format(axis='both', style='plain')
+
+#axis.set_title('mean of counts = %1.3f' %intervalcountmean + ' , std interval counts = %1.3f' %intervalcountstd + ' ,**font)
+
+axis.set_xlabel('delta_t/delta',**font)
+axis.set_ylabel('pmf',**font)
 
 
 
