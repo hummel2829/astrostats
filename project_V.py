@@ -24,18 +24,20 @@ bins=np.arange(0,100,1)
 
 intervaldiff = 1e7
 
-ch1TrueTimehist , bb = np.histogram(NVch1TrueTimet1stdiff/intervaldiff,bins=np.arange(0,100,1))
+ch1TrueTimehist , bb = np.histogram(NVch1TrueTimet1stdiff/intervaldiff,bins=bins)
 
 avgexp_unitless = (np.sum(NVch1TrueTimet1stdiff/intervaldiff)) / len(NVch1TrueTimet1stdiff[0])
 
 ch1TrueTimehist = ch1TrueTimehist/np.sum(ch1TrueTimehist)
 
+ch1TrueTimehist = ch1TrueTimehist[1:]
 
 logch1TrueTimehist = np.log(ch1TrueTimehist)
 idx = logch1TrueTimehist != -np.inf
 logch1TrueTimehist = logch1TrueTimehist[idx]
-binsc = bins[0:-1]+0.5
+binsc = bins[1:-1]+0.5
 binscidx = binsc[idx]
+#binscidx = binscidx[1:]
 
 
 
@@ -47,9 +49,11 @@ mfit,bfit = np.polyfit(x , y ,1)
 
 ############## paper MLE
 
+x = np.sort(NVch1TrueTime[0])/intervaldiff
+
 lamvalue = np.array([0.1 ,-mfit]) # -mfit bc lambda negative in equation
 i = len(lamvalue)
-while (np.abs(lamvalue[i-1]-lamvalue[i-2])/lamvalue[i-2]) > 0.005:
+while (np.abs(lamvalue[i-1]-lamvalue[i-2])/lamvalue[i-2]) > 0.0001:
 
     lamiteration =( np.exp(-lamvalue[i-1]*x[0]) - np.exp(-lamvalue[i-1]*x[-1]) ) \
     / ( (avgexp_unitless - x[0]) * np.exp(-lamvalue[i-1]*x[0]) \
@@ -60,6 +64,22 @@ while (np.abs(lamvalue[i-1]-lamvalue[i-2])/lamvalue[i-2]) > 0.005:
     
 #################################
 
+
+###################### john edit to wolf y -> lny
+x = binscidx #normalized deltat/interval difference
+
+y = logch1TrueTimehist #normalized for probability instead of counts
+
+mj = (np.sum(np.log(y)) * np.sum(x * np.log(y) * np.log(y)) - np.sum(x*np.log(y)) * np.sum(np.log(y)*np.log(y))) \
+    / ( np.sum(np.log(y)) * np.sum(x * x * np.log(y)) - np.sum(x * np.log(y))**2 )
+
+
+bj = ( np.sum(x * x * np.log(y)) * np.sum(np.log(y)*np.log(y)) - np.sum(x * np.log(y)) * np.sum(x * np.log(y) * np.log(y)) ) \
+    / ( np.sum(np.log(y)) * np.sum(x * x * np.log(y)) - np.sum(x * np.log(y))**2 )
+
+
+##############################################
+
 #################### poisson sim
 lambda1 = (1/avgexp_unitless) # 1/ (time per photon)
 
@@ -69,8 +89,11 @@ lambda3 = np.exp(bfit)  # = intercept naive line fit = e^b
 
 lambda4 = lamvalue[-1] # iteration method from paper considering weighted regression
 
+lambda5 = mj
 
-lambdaall = np.array([lambda1, lambda2, lambda3, lambda4])
+lambda6 = bj
+
+lambdaall = np.array([lambda1, lambda2, lambda3, lambda4, lambda5, lambda6])
 
 
 measurements = 10000
@@ -137,28 +160,28 @@ plt.yticks(fontsize = 25)
 
 #axis.set_title('mean of counts = %1.3f' %intervalcountmean + ' , std interval counts = %1.3f' %intervalcountstd + ' ,**font)
 
-axis.set_xlabel('delta_t/delta',**font)
-axis.set_ylabel('pmf',**font)
+axis.set_xlabel(r'$\Delta$t/$\delta$',**font)
+axis.set_ylabel('log(pmf)',**font)
 
 
 figure2, axis = plt.subplots(1, 1,constrained_layout=True)
 
-axis.scatter(binsc , exp1, s=100, c='r', marker="o", label='interval count')
-axis.scatter(binsc , exp2, s=100, c='b', marker="o", label='interval count')
-axis.scatter(binsc , exp3, s=200, c='g', marker="*", label='interval count')
-axis.scatter(binsc , exp4, s=100, c='purple', marker="X", label='interval count')
-axis.bar(binsc , ch1TrueTimehist, alpha = 1, fill = False, label='interval count')
-#axis.legend(loc='upper right',fontsize = 25)
+axis.plot(binsc , np.log(exp1) - np.log(ch1TrueTimehist),  c='r', marker="o", label='1/mean fit,  lambda1 = %1.5f' %lambda1)
+axis.plot(binsc , np.log(exp2) - np.log(ch1TrueTimehist),  c='b', marker="o", label='slope of lin reg, lambda2 = %1.5f' %lambda2)
+axis.plot(binsc , np.log(exp3) - np.log(ch1TrueTimehist),  c='g', marker="*", label='intercept of lin reg, lambda3 = %1.5f' %lambda3)
+axis.plot(binsc , np.log(exp4) - np.log(ch1TrueTimehist),  c='purple', marker="X", label='iteration of lambda, lambda4 = %1.5f' %lambda4)
+#axis.plot(binsc , np.log(ch1TrueTimehist), label='interval count')
+axis.legend(loc='upper left',fontsize = 25)
 
 font = {'fontname' : 'Times New Roman' , 'size' : 25}
 plt.xticks(fontsize = 25)
 plt.yticks(fontsize = 25)
 #plt.ticklabel_format(axis='both', style='plain')
 
-#axis.set_title('mean of counts = %1.3f' %intervalcountmean + ' , std interval counts = %1.3f' %intervalcountstd + ' ,**font)
+axis.set_title('Simulated exp distributions error' ,**font)
 
-axis.set_xlabel('delta_t/delta',**font)
-axis.set_ylabel('pmf',**font)
+axis.set_xlabel(r'$\Delta$t/$\delta$',**font)
+axis.set_ylabel('log(exp fit) - log(data)',**font)
 
 
 
@@ -168,23 +191,48 @@ x2 = pdata2binedge[0:-1]+(pdata2binedge[1] - pdata2binedge[0])/2
 x3 = pdata3binedge[0:-1]+(pdata3binedge[1] - pdata3binedge[0])/2
 x4 = pdata4binedge[0:-1]+(pdata4binedge[1] - pdata4binedge[0])/2
 
-axis.bar( x1, pdata1prob, alpha = 0.5, color = 'blue', label='interval count')
-#axis.bar( x2, pdata2prob, alpha = 0.5, color = 'red', label='interval count')
-#axis.bar( x3, pdata3prob, alpha = 0.5, color = 'orange', label='interval count')
-#axis.bar( x4, pdata4prob, alpha = 0.5, color = 'purple', label='interval count')
+x1 = np.arange(4)
+x2 = x3 = x4 = x1
 
-#axis.legend(loc='upper right',fontsize = 25)
+size = 200
+
+axis.scatter( x1, pdata1prob, s = size, color = 'blue', label = 'lambda1 = %1.5f  ' %lambda1 + ',  mean counts = %1.5f' %np.mean(pdata1))
+axis.scatter( x2, pdata2prob, s = size, color = 'red', label = 'lambda2 = %1.5f  ' %lambda2 + ',  mean counts = %1.5f' %np.mean(pdata2))
+axis.scatter( x3, pdata3prob, s = size, color = 'orange', label = 'lambda3 = %1.5f  ' %lambda3 + ',  mean counts = %1.5f' %np.mean(pdata3))
+axis.scatter( x4, pdata4prob, s = size, color = 'purple', label = 'lambda4 = %1.5f  ' %lambda4 + ',  mean counts = %1.5f' %np.mean(pdata4))
+
+
+axis.legend(loc='upper right',fontsize = 25)
 
 font = {'fontname' : 'Times New Roman' , 'size' : 25}
 plt.xticks(fontsize = 25)
 plt.yticks(fontsize = 25)
 #plt.ticklabel_format(axis='both', style='plain')
 
-#axis.set_title('mean of counts = %1.3f' %intervalcountmean + ' , std interval counts = %1.3f' %intervalcountstd + ' ,**font)
+axis.set_title('poisson sim from rate parameter estimations',**font)
 
-axis.set_xlabel('delta_t/delta',**font)
+axis.set_xlabel('photons detected',**font)
 axis.set_ylabel('pmf',**font)
 
+
+figure4, axis = plt.subplots(1, 1,constrained_layout=True)
+
+axis.plot(binsc , np.log(exp1),  c='r', marker="o", label='1/mean fit,  lambda1 = %1.5f' %lambda1)
+axis.plot(binsc , np.log(exp2),  c='b', marker="o", label='slope of lin reg, lambda2 = %1.5f' %lambda2)
+axis.plot(binsc , np.log(exp3),  c='g', marker="*", label='intercept of lin reg, lambda3 = %1.5f' %lambda3)
+axis.plot(binsc , np.log(exp4),  c='purple', marker="X", label='iteration of lambda, lambda4 = %1.5f' %lambda4)
+axis.plot(binsc , np.log(ch1TrueTimehist), label='interval count')
+axis.legend(loc='upper right',fontsize = 25)
+
+font = {'fontname' : 'Times New Roman' , 'size' : 25}
+plt.xticks(fontsize = 25)
+plt.yticks(fontsize = 25)
+#plt.ticklabel_format(axis='both', style='plain')
+
+axis.set_title('Simulated exp distributions error' ,**font)
+
+axis.set_xlabel(r'$\Delta$t/$\delta$',**font)
+axis.set_ylabel('log(exp fit) - log(data)',**font)
 
 
 
