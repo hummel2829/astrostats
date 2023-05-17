@@ -1,7 +1,7 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-    from scipy.special import factorial
+from scipy.special import factorial
 
 filename = r'D:\Python\picoquant\antibunch\NV-Center_for_Antibunching_1.out'
 NVdata = np.loadtxt(filename, delimiter = ',', usecols = (0,1,2), skiprows = 1)
@@ -24,13 +24,11 @@ photonpersecond = len(NVch1TrueTime) / NVch1TrueTime[-1] # number photon / total
 
 bins=np.arange(0,10,0.1)
 
-#intervaldiff = 1e7
 avgintervaldiff = np.average(np.abs(np.diff(NVch1TrueTimet1stdiff)))
 
 
 ch1TrueTimehist , histbins = np.histogram(NVch1TrueTimet1stdiff/avgintervaldiff,bins=bins)
 
-#avgexp_unitless = (np.sum(NVch1TrueTimet1stdiff)/avgintervaldiff) / len(NVch1TrueTimet1stdiff)
 
 ch1TrueTimehist = ch1TrueTimehist/np.sum(ch1TrueTimehist)
 
@@ -39,14 +37,9 @@ idx = ch1TrueTimehist != 0
 
 ch1TrueTimehist = ch1TrueTimehist[idx]
 
-logch1TrueTimehist = np.log(ch1TrueTimehist)
-#idx = logch1TrueTimehist != -np.inf
-#logch1TrueTimehist = logch1TrueTimehist[idx]
 binsc = bins[0:-1]+ np.diff(bins)[0]/2
 binscidx = binsc[idx]
 
-#plt.plot(expsimdata)
-#plt.show
 
 y = ch1TrueTimehist
 x = binscidx
@@ -118,40 +111,6 @@ lambda7 = np.exp(bj)
 lambdaall = np.array([lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7])
 
 
-###########################  exp distribution sim for theoretical comparison
-
-'''
-
-exp1simdata =np.sort( np.random.exponential(1/lambda1 , 10000))
-exp1simdata = np.flip(exp1simdata)
-
-exp2simdata =np.sort( np.random.exponential(1/lambda2 , 10000))
-exp2simdata = np.flip(exp2simdata)
-
-exp3simdata =np.sort( np.random.exponential(1/lambda3 , 10000))
-exp3simdata = np.flip(exp3simdata)
-
-exp4simdata =np.sort( np.random.exponential(1/lambda4 , 10000))
-exp4simdata = np.flip(exp4simdata)
-
-exp5simdata =np.sort( np.random.exponential(1/lambda5 , 10000))
-exp5simdata = np.flip(exp5simdata)
-
-exp6simdata =np.sort( np.random.exponential(1/lambda6 , 10000))
-exp6simdata = np.flip(exp6simdata)
-
-exp7simdata =np.sort( np.random.exponential(1/lambda7 , 10000))
-exp7simdata = np.flip(exp7simdata)
-
-exp1hist, exp1bins, ign = plt.hist(exp1simdata, bins=bins)
-exp2hist, exp2bins, ign = plt.hist(exp2simdata, bins=bins)
-exp3hist, exp3bins, ign = plt.hist(exp3simdata, bins=bins)
-exp4hist, exp4bins, ign = plt.hist(exp4simdata, bins=bins)
-exp5hist, exp5bins, ign = plt.hist(exp5simdata, bins=bins)
-exp6hist, exp6bins, ign = plt.hist(exp6simdata, bins=bins)
-exp7hist, exp7bins, ign = plt.hist(exp7simdata, bins=bins)
-
-'''
 
 ###########################  exp equation sim for theoretical comparison
 
@@ -180,8 +139,6 @@ exp7 = exp7/np.sum(exp7)
 
 ########################### poisson sim
 
-#k = np.arange(0,10,1)
-#ptest = (lambda1**k * np.exp(-lambda1))/factorial(k)
 
 
 pdata = np.random.poisson(lambdaall,(10000,len(lambdaall)))
@@ -226,16 +183,27 @@ for i in range(pdataallhist.shape[0]):
     muall[i] = np.sum(pdataallhist[i]*x)
     varall[i] = np.sum(pdataallhist[i]*(x-muall[i])**2)
 
-pdata1histboot = np.random.choice(pdata1hist, size = (10000, len(pdata1hist)))
-mu1boot = np.sum(pdata1histboot*x, axis = 1)
-mu1boot_T = mu1boot[:,np.newaxis] #reshapes so x-mu[i] is valid
-x_boot = np.resize(x_boot, (len(mu1boot),len(x)))
-#########################
-######################3## DOUBLE CHECK
-var1boot = np.sum(pdata1histboot*(x_boot-mu1boot_T)**2)
-#DOUBLE CHECK#########################
-#############
-############
+
+probxall = pdataallhist*x
+muboot = np.zeros(probxall.shape)
+n = muboot.shape[1]
+for i in range(probxall.shape[0]):
+    muboot[i] = np.sum(np.random.choice(probxall[i], size = (n, probxall.shape[1])), axis = 1)
+
+
+
+zlamall = (np.mean(muboot, axis=1) - muall)/(np.std(muboot, axis=1)/(n**0.5))
+
+znall = (np.mean(muboot, axis=1) - varall)/(np.std(muboot, axis=1)/(n**0.5))
+
+
+
+#hypothesis test 
+#Hnull mu1boot - mu1 = 0
+#Halt mu1boot not= mu1
+#alpha = 99.5, Z table value 2.58, significance level 0.01
+
+
 ##################### plots
 
 figure1, axis = plt.subplots(1, 1,constrained_layout=True)
@@ -244,13 +212,13 @@ axis.plot(x,np.log(y), c = 'black', marker = '*', ms = 20, label = 'NVdata')
 
 
 
-#axis.plot(x , np.log(exp1),  c='purple', marker="o", ms = 18, label='lambda1 = %1.5f' %lambda1)
-#axis.plot(x , np.log(exp2),  c='brown', marker="o", ms = 16, label='lambda2 = %1.5f' %lambda2)
-#axis.plot(x , np.log(exp3),  c='red', marker="o", ms = 14, label='lambda3 = %1.5f' %lambda3)
-#axis.plot(x , np.log(exp4),  c='blue', marker="o", ms = 12, label='lambda4 = %1.5f' %lambda4)
+axis.plot(x , np.log(exp1),  c='purple', marker="o", ms = 18, label='lambda1 = %1.5f' %lambda1)
+axis.plot(x , np.log(exp2),  c='brown', marker="o", ms = 16, label='lambda2 = %1.5f' %lambda2)
+axis.plot(x , np.log(exp3),  c='red', marker="o", ms = 14, label='lambda3 = %1.5f' %lambda3)
+axis.plot(x , np.log(exp4),  c='blue', marker="o", ms = 12, label='lambda4 = %1.5f' %lambda4)
 axis.plot(x , np.log(exp5),  c='green', marker="o", ms = 10, label='lambda5 = %1.5f' %lambda5)
-#axis.plot(x , np.log(exp6),  c='pink', marker="o", ms = 8, label='lambda6 = %1.5f' %lambda6)
-#axis.plot(x , np.log(exp7),  c='orange', marker="o", ms = 6, label='lambda7 = %1.5f' %lambda7)
+axis.plot(x , np.log(exp6),  c='pink', marker="o", ms = 8, label='lambda6 = %1.5f' %lambda6)
+axis.plot(x , np.log(exp7),  c='orange', marker="o", ms = 6, label='lambda7 = %1.5f' %lambda7)
 
 
 font = {'fontname' : 'Times New Roman' , 'size' : 25}
@@ -263,20 +231,20 @@ axis.set_title('Log plot of exp sim histogram of NVdata' ,**font)
 axis.set_xlabel(r'$\Delta$t/$\delta$',**font) #Delta = interval, delta = avg diff of intervals
 axis.set_ylabel('log(NVdata)',**font)
 
-axis.legend(loc='upper right',fontsize = 25)
+axis.legend(loc='upper right',fontsize = 40)
 
 
 
 figure2, axis = plt.subplots(1, 1,constrained_layout=True)
 
 
-#axis.plot(x , np.log(y) - np.log(exp1),  c='purple', marker="o", ms = 20, label='lambda1 = %1.5f' %lambda1)
-#axis.plot(x , np.log(y) - np.log(exp2),  c='brown', marker="o", ms = 18, label='lambda2 = %1.5f' %lambda2)
-#axis.plot(x , np.log(y) - np.log(exp3),  c='red', marker="o", ms = 16, label='lambda3 = %1.5f' %lambda3)
-#axis.plot(x , np.log(y) - np.log(exp4),  c='blue', marker="o", ms = 14, label='lambda4 = %1.5f' %lambda4)
+axis.plot(x , np.log(y) - np.log(exp1),  c='purple', marker="o", ms = 20, label='lambda1 = %1.5f' %lambda1)
+axis.plot(x , np.log(y) - np.log(exp2),  c='brown', marker="o", ms = 18, label='lambda2 = %1.5f' %lambda2)
+axis.plot(x , np.log(y) - np.log(exp3),  c='red', marker="o", ms = 16, label='lambda3 = %1.5f' %lambda3)
+axis.plot(x , np.log(y) - np.log(exp4),  c='blue', marker="o", ms = 14, label='lambda4 = %1.5f' %lambda4)
 axis.plot(x , np.log(y) - np.log(exp5),  c='green', marker="o", ms = 12, label='lambda5 = %1.5f' %lambda5)
-#axis.plot(x , np.log(y) - np.log(exp6),  c='pink', marker="o", ms = 10, label='lambda6 = %1.5f' %lambda6)
-#axis.plot(x , np.log(y) - np.log(exp7),  c='orange', marker="o", ms = 8, label='lambda7 = %1.5f' %lambda7)
+axis.plot(x , np.log(y) - np.log(exp6),  c='pink', marker="o", ms = 10, label='lambda6 = %1.5f' %lambda6)
+axis.plot(x , np.log(y) - np.log(exp7),  c='orange', marker="o", ms = 8, label='lambda7 = %1.5f' %lambda7)
 
 
 font = {'fontname' : 'Times New Roman' , 'size' : 25}
@@ -469,6 +437,58 @@ axis.set_ylabel('log(NVdata)',**font)
 axis.legend(loc='upper right',fontsize = 25)
 
 
+plt.figure(111)
+histbins1, bins1, ign = plt.hist(NVch1TrueTimet1stdiff/avgintervaldiff,bins*10)
+histbins01, bins01, ign = plt.hist(NVch1TrueTimet1stdiff/avgintervaldiff,bins, color = 'red')
+
+histbins1 = histbins1/np.sum(histbins1)
+
+
+idx1 = histbins1 != 0
+
+histbins1 = histbins1[idx1]
+
+binsc1 = bins1[0:-1]+ np.diff(bins1)[0]/2
+binscidx1 = binsc1[idx1]
+
+y1 = histbins1
+x1 = binscidx1
+
+m1,b1 = np.polyfit(x1-0.5 , np.log(y1) ,1)
+
+histbins01 = histbins01/np.sum(histbins01)
+
+
+idx01 = histbins01 != 0
+
+histbins01 = histbins01[idx01]
+
+binsc01 = bins01[0:-1]+ np.diff(bins01)[0]/2
+binscidx01 = binsc01[idx01]
+
+y01 = histbins01
+x01 = binscidx01
+
+m01,b01 = np.polyfit(x01 , np.log(y01) ,1)
+
+
+
+figure11, axis = plt.subplots(1, 1,constrained_layout=True)
+
+axis.plot(x1-0.5 , np.log(y1) , c='blue', marker="o", ms = 10, label='bin width = 1 , slope = %1.5f' %m1 + ', intercept = %1.5f' %b1)
+axis.plot(x01 , np.log(y01) , c='red', marker="o", ms = 10, label='bin width = 0.1 , slope = %1.5f' %m01 + ', intercept = %1.5f' %b01)
+
+font = {'fontname' : 'Times New Roman' , 'size' : 40}
+plt.xticks(fontsize = 25)
+plt.yticks(fontsize = 25)
+#plt.ticklabel_format(axis='both', style='plain')
+
+axis.set_title('Bin width affect on linear intercept' ,**font)
+
+axis.set_xlabel(r'$\Delta$t/$\delta$',**font) #Delta = interval, delta = avg diff of intervals
+axis.set_ylabel('log(NVdata)',**font)
+
+axis.legend(loc='upper right',fontsize = 25)
 
 
 plt.grid()
